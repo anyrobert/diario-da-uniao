@@ -1,0 +1,10 @@
+{
+  "deno.enable": true,
+  "jest.runMode": {
+    "command": "on-demand",
+    "coverage": false,
+    "runAllTestsOnStartup": false,
+    "testFileOnly": true,
+    "type": "on-save"
+  }
+}
