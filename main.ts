@@ -6,40 +6,43 @@ import { isValidDate } from "./helpers/is-valid-date.ts";
 
 if (import.meta.main) {
   const input = Deno.args[0];
-  let day = "";
+  let date = "";
 
   if (input && isValidDate(input)) {
-    day = input;
+    date = input;
   } else {
-    day = `${new Date().getFullYear()}-${
+    date = `${new Date().getFullYear()}-${
       new Date().getMonth() + 1
     }-${new Date().getDate()}`;
   }
 
-  const hasTodayNote = await exists(`./notes/${day}.md`);
+  const hasTodayNote = await exists(`./notes/${date}.md`);
 
   if (!hasTodayNote) {
     const highlights = await getHighlights();
 
-    const result = await compileHighlights(
+    const compiledHighlights = await compileHighlights(
       highlights.filter(
-        (h) => h.date === new Date(day).toLocaleDateString("pt-BR")
+        (h) => h.date === new Date(date).toLocaleDateString("pt-BR")
       )
     );
 
-    if (!result) {
+    if (!compiledHighlights) {
       throw new Error("Failed to compile highlights");
     }
 
     const composed = compose({
-      date: day,
-      highlights: result,
+      date,
+      highlights: compiledHighlights,
     });
 
-    Deno.writeFileSync(`./notes/${day}.md`, new TextEncoder().encode(composed));
+    Deno.writeFileSync(
+      `./notes/${date}.md`,
+      new TextEncoder().encode(composed)
+    );
   }
 
-  const note = Deno.readFileSync(`./notes/${day}.md`);
+  const note = Deno.readFileSync(`./notes/${date}.md`);
 
   Deno.stdout.writeSync(note);
 }
