@@ -3,6 +3,7 @@ import { compose } from "./composer/index.ts";
 import { exists } from "./helpers/exists.ts";
 import { getHighlights } from "./scraper/index.ts";
 import { isValidDate } from "./helpers/is-valid-date.ts";
+import { withCache } from "./cache/index.ts";
 
 if (import.meta.main) {
   const input = Deno.args[0];
@@ -19,13 +20,20 @@ if (import.meta.main) {
   const hasTodayNote = await exists(`./notes/${date}.md`);
 
   if (!hasTodayNote) {
-    const highlights = await getHighlights();
+    const highlights = await withCache(getHighlights, `${date}`)();
 
-    const compiledHighlights = await compileHighlights(
-      highlights.filter(
-        (h) => h.date === new Date(date).toLocaleDateString("pt-BR")
-      )
-    );
+    const brDate = date.split("-").reverse().join("/");
+
+    const todayHighlights = highlights.filter((h) => h.date === brDate);
+
+    if (todayHighlights.length === 0) {
+      console.log("no highlights for today");
+      Deno.exit(0);
+    }
+
+    console.log(`there are ${todayHighlights.length} highlights for today`);
+
+    const compiledHighlights = await compileHighlights(todayHighlights);
 
     if (!compiledHighlights) {
       throw new Error("Failed to compile highlights");
