@@ -1,4 +1,5 @@
 import OpenAI from "jsr:@openai/openai";
+import { writeAllSync } from "jsr:@std/io";
 
 import { Highlight } from "../scraper/index.ts";
 
@@ -33,6 +34,7 @@ export async function compileHighlights(highlights: Highlight[]) {
     let fullContent = "";
     for await (const chunk of stream) {
       const content = chunk.choices[0]?.delta?.content || "";
+      writeAllSync(Deno.stdout, new TextEncoder().encode(content));
       fullContent += content;
     }
 
