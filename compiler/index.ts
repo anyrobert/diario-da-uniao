@@ -18,12 +18,31 @@ const prompt = `
 `;
 
 export async function compileHighlights(highlights: Highlight[]) {
-  const response = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [
-      { role: "system", content: prompt },
-      { role: "user", content: JSON.stringify(highlights) },
-    ],
-  });
-  return response.choices[0].message.content;
+  try {
+    const stream = await openai.chat.completions.create({
+      model: "gpt-4-turbo-preview",
+      messages: [
+        { role: "system", content: prompt },
+        { role: "user", content: JSON.stringify(highlights) },
+      ],
+      temperature: 0.7,
+      max_tokens: 2000,
+      stream: true,
+    });
+
+    let fullContent = "";
+    for await (const chunk of stream) {
+      const content = chunk.choices[0]?.delta?.content || "";
+      fullContent += content;
+    }
+
+    if (!fullContent) {
+      throw new Error("No content received from OpenAI");
+    }
+
+    return fullContent;
+  } catch (error) {
+    console.error("Error compiling highlights:", error);
+    throw new Error(`Failed to compile highlights: ${error}`);
+  }
 }
