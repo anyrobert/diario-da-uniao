@@ -21,7 +21,7 @@ const prompt = `
 export async function compileHighlights(highlights: Highlight[]) {
   try {
     const stream = await openai.chat.completions.create({
-      model: "gpt-4-turbo-preview",
+      model: "hermes-3-llama-3.2-3b",
       messages: [
         { role: "system", content: prompt },
         { role: "user", content: JSON.stringify(highlights) },
