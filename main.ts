@@ -16,7 +16,7 @@ if (import.meta.main) {
       new Date().getMonth() + 1
     }-${new Date().getDate()}`;
   }
-
+  console.log(`fetching highlights for ${date}`); 
   const hasTodayNote = await exists(`./notes/${date}.md`);
 
   if (!hasTodayNote) {
