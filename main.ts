@@ -12,11 +12,12 @@ if (import.meta.main) {
   if (input && isValidDate(input)) {
     date = input;
   } else {
-    date = `${new Date().getFullYear()}-${
-      new Date().getMonth() + 1
-    }-${new Date().getDate()}`;
+    const day = String(new Date().getDate()).padStart(2, "0");
+    const month = String(new Date().getMonth() + 1).padStart(2, "0");
+    const year = String(new Date().getFullYear());
+    date = `${year}-${month}-${day}`;
   }
-  console.log(`fetching highlights for ${date}`); 
+  console.log(`fetching highlights for ${date}`);
   const hasTodayNote = await exists(`./notes/${date}.md`);
 
   if (!hasTodayNote) {
