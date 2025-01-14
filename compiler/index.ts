@@ -18,10 +18,13 @@ const prompt = `
     Você será penalizado se não seguir as instruções.
 `;
 
-export async function compileHighlights(highlights: Highlight[]) {
+export async function compileHighlights(
+  highlights: Highlight[],
+  model: string
+) {
   try {
     const stream = await openai.chat.completions.create({
-      model: "mlx-community/Mistral-Nemo-Instruct-2407-4bit",
+      model,
       messages: [
         { role: "system", content: prompt },
         { role: "user", content: JSON.stringify(highlights) },
