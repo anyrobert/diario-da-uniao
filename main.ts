@@ -30,24 +30,24 @@ if (dateFlag && isValidDate(dateFlag)) {
   date = `${year}-${month}-${day}`;
 }
 console.log(`fetching highlights for ${date}`);
-const hasTodayNote = await exists(`./notes/${date}.md`);
+const hasNote = await exists(`./notes/${date}.md`);
 
-if (!hasTodayNote) {
+if (!hasNote) {
   const highlights = await withCache(getHighlights, `${date}`)();
 
   const brDate = date.split("-").reverse().join("/");
 
-  const todayHighlights = highlights.filter((h) => h.date === brDate);
+  const dateHighlights = highlights.filter((h) => h.date === brDate);
 
-  if (todayHighlights.length === 0) {
-    console.log("no highlights for today");
+  if (dateHighlights.length === 0) {
+    console.log(`no highlights for ${date}`);
     Deno.exit(0);
   }
 
-  console.log(`there are ${todayHighlights.length} highlights for today`);
+  console.log(`there are ${dateHighlights.length} highlights for ${date}`);
 
   const compiledHighlights = await compileHighlights(
-    todayHighlights,
+    dateHighlights,
     modelFlag
   );
 
