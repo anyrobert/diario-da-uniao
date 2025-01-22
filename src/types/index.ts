@@ -14,10 +14,6 @@ export interface NoteComposition {
   highlights: CompiledHighlight[];
 }
 
-export interface CacheOptions {
-  ttl?: number;
-  force?: boolean;
-}
 
 export interface AIModelConfig {
   model: string;
@@ -37,7 +33,7 @@ export interface ScraperService {
 
 export interface CacheService {
   get<T>(key: string): Promise<T | null>;
-  set<T>(key: string, value: T, options?: CacheOptions): Promise<void>;
+  set<T>(key: string, value: T): Promise<void>;
 }
 
 export interface CompilerService {

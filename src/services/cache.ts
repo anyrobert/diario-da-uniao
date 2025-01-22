@@ -1,4 +1,4 @@
-import { CacheService, CacheOptions } from "../types/index.ts";
+import { CacheService } from "../types/index.ts";
 import { config } from "../config/config.ts";
 
 export class FileSystemCache implements CacheService {
@@ -23,7 +23,7 @@ export class FileSystemCache implements CacheService {
     }
   }
 
-  async set<T>(key: string, value: T, options?: CacheOptions): Promise<void> {
+  async set<T>(key: string, value: T): Promise<void> {
     const path = this.getCachePath(key);
     
     try {

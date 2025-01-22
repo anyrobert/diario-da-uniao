@@ -1,4 +1,4 @@
-import { assertEquals, assertRejects } from "jsr:@std/assert";
+import { assertEquals } from "jsr:@std/assert";
 import { FileSystemCache } from "../src/services/cache.ts";
 
 const TEST_CACHE_DIR = ".test_cache";

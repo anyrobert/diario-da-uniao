@@ -12,6 +12,11 @@
     "@std/cli": "jsr:@std/cli@^1.0.10",
     "@std/io": "jsr:@std/io@^0.225.0"
   },
+  "lint": {
+    "rules": {
+      "exclude": ["require-await"]
+    }
+  },
   "fmt": {
     "indentWidth": 2,
     "lineWidth": 100,
