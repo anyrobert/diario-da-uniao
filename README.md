@@ -23,4 +23,4 @@ Be sure to have a `notes` folder created before running the scripts.
 ./dou.sh
 
 # Get digest for a specific date
-./dou.sh 2024-03-20
+./dou.sh --date=2025-01-31
