@@ -37,5 +37,5 @@ export interface CacheService {
 }
 
 export interface CompilerService {
-  compileHighlights(highlights: Highlight[]): Promise<CompiledHighlight[]>;
-} 
+  compileHighlights(highlights: Highlight[]): Promise<string>;
+}

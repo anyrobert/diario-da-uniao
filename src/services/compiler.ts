@@ -1,10 +1,10 @@
 import OpenAI from "jsr:@openai/openai";
 import { writeAllSync } from "jsr:@std/io";
-import { Highlight, CompiledHighlight } from "../types/index.ts";
+import { Highlight } from "../types/index.ts";
 import { config } from "../config/config.ts";
 
 export interface CompilerService {
-  compileHighlights(highlights: Highlight[]): Promise<CompiledHighlight[]>;
+  compileHighlights(highlights: Highlight[]): Promise<string>;
 }
 
 export class OpenAICompilerService implements CompilerService {
@@ -46,7 +46,7 @@ export class OpenAICompilerService implements CompilerService {
     `.trim();
   }
 
-  async compileHighlights(highlights: Highlight[]): Promise<CompiledHighlight[]> {
+  async compileHighlights(highlights: Highlight[]): Promise<string> {
     try {
       const stream = await this.openai.chat.completions.create({
         model: this.model,
@@ -70,11 +70,7 @@ export class OpenAICompilerService implements CompilerService {
         throw new Error("No content received from OpenAI");
       }
 
-      // Transform the highlights with the generated summaries
-      return highlights.map((highlight) => ({
-        ...highlight,
-        summary: fullContent,
-      }));
+      return fullContent;
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       throw new Error(`Failed to compile highlights: ${message}`);
