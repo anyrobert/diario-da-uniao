@@ -43,6 +43,7 @@ export class OpenAICompilerService implements CompilerService {
       Você sempre cita todas as notícias e fontes.
       Você sempre coloca a DATA das notícias no COMEÇO do texto.
       Você será penalizado se não seguir as instruções.
+      Você não corta o texto e fala das principais notícias sem filtro.
     `.trim();
   }
 
