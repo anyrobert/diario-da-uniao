@@ -1,4 +1,4 @@
-import { DOMParser, Element } from "jsr:@b-fuze/deno-dom";
+import { DOMParser, Element } from "@b-fuze/deno-dom";
 import { Highlight, ScraperService } from "../types/index.ts";
 
 export class DOUScraperService implements ScraperService {

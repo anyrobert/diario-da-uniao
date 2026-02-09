@@ -1,9 +1,14 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import { FileSystemCache } from "../src/services/cache.ts";
 
 const TEST_CACHE_DIR = ".test_cache";
+const hasReadPermission = (await Deno.permissions.query({ name: "read" })).state === "granted";
+const hasWritePermission = (await Deno.permissions.query({ name: "write" })).state === "granted";
 
-Deno.test("FileSystemCache", async (t) => {
+Deno.test({
+  name: "FileSystemCache",
+  ignore: !hasReadPermission || !hasWritePermission,
+  async fn(t) {
   const cache = new FileSystemCache(TEST_CACHE_DIR);
   const testData = { test: "data" };
 
@@ -44,4 +49,5 @@ Deno.test("FileSystemCache", async (t) => {
       // Ignore cleanup errors
     }
   });
-}); 
+  },
+});

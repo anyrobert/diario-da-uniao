@@ -1,7 +1,7 @@
-import OpenAI from "jsr:@openai/openai";
-import { writeAllSync } from "jsr:@std/io";
+import OpenAI from "@openai/openai";
 import { Highlight } from "../types/index.ts";
 import { config } from "../config/config.ts";
+import { getOptionalEnv } from "../utils/env.ts";
 
 export interface CompilerService {
   compileHighlights(highlights: Highlight[]): Promise<string>;
@@ -13,27 +13,35 @@ export class OpenAICompilerService implements CompilerService {
   private readonly systemPrompt: string;
 
   constructor(
-    apiKey = Deno.env.get("OPENAI_API_KEY"),
-    baseURL = Deno.env.get("OPENAI_BASE_URL"),
-    model = config.aiModel.model
+    apiKey?: string,
+    baseURL?: string,
+    model = config.aiModel.model,
+    openaiClient?: OpenAI
   ) {
-    if (!apiKey && !baseURL) {
-      throw new Error("Either OpenAI API key or base URL is required");
-    }
+    if (openaiClient) {
+      this.openai = openaiClient;
+    } else {
+      const resolvedApiKey = apiKey ?? getOptionalEnv("OPENAI_API_KEY");
+      const resolvedBaseURL = baseURL ?? getOptionalEnv("OPENAI_BASE_URL");
 
-    // For local models, we need to provide a dummy API key
-    const options: { apiKey?: string; baseURL?: string } = {};
-    if (apiKey) {
-      options.apiKey = apiKey;
-    }
-    if (baseURL) {
-      options.baseURL = baseURL;
-      if (!apiKey) {
-        options.apiKey = "dummy-key-for-local-model";
+      if (!resolvedApiKey && !resolvedBaseURL) {
+        throw new Error("Either OpenAI API key or base URL is required");
       }
-    }
 
-    this.openai = new OpenAI(options);
+      // For local models, we need to provide a dummy API key
+      const options: { apiKey?: string; baseURL?: string } = {};
+      if (resolvedApiKey) {
+        options.apiKey = resolvedApiKey;
+      }
+      if (resolvedBaseURL) {
+        options.baseURL = resolvedBaseURL;
+        if (!resolvedApiKey) {
+          options.apiKey = "dummy-key-for-local-model";
+        }
+      }
+
+      this.openai = new OpenAI(options);
+    }
     this.model = model;
     this.systemPrompt = `
       Você é um jornalista que escreve sobre notícias do Brasil.
@@ -63,7 +71,6 @@ export class OpenAICompilerService implements CompilerService {
       let fullContent = "";
       for await (const chunk of stream) {
         const content = chunk.choices[0]?.delta?.content || "";
-        writeAllSync(Deno.stdout, new TextEncoder().encode(content));
         fullContent += content;
       }
 

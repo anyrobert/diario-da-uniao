@@ -1,4 +1,4 @@
-import { parseArgs } from "jsr:@std/cli/parse-args";
+import { parseArgs } from "@std/cli/parse-args";
 import { Highlight, CacheService, ScraperService, CompilerService } from "../types/index.ts";
 import { config } from "../config/config.ts";
 

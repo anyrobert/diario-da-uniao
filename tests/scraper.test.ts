@@ -1,4 +1,4 @@
-import { assertEquals, assertRejects } from "jsr:@std/assert";
+import { assertEquals, assertRejects } from "@std/assert";
 import { DOUScraperService } from "../src/services/scraper.ts";
 
 const mockHtml = `
