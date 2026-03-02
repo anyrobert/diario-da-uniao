@@ -23,26 +23,35 @@ Brazil's Official Gazette (Diário Oficial da União).
 Be sure to have a `notes` folder created before running the scripts.
 
 ```bash
+# Install global `dou` command (one-time)
+./scripts/install-dou.sh
+
+# Show all CLI options
+dou --help
+
 # Get today's digest
-./dou.sh
+dou
 
 # Get digest for a specific date
-./dou.sh --date=2025-01-31
+dou --date=2025-01-31
 
-# Force a specific scraping strategy order
-SCRAPER_SOURCE_ORDER=consulta,highlights ./dou.sh --date=2025-01-31
+# Force a specific scraping strategy order (flags)
+dou --source-order=consulta,highlights --date=2025-01-31
 
-# Keep only the highlights-page strategy
-SCRAPER_SOURCE_ORDER=highlights ./dou.sh --date=2025-01-31
+# Keep only the highlights-page strategy (flags)
+dou --source-order=highlights --date=2025-01-31
 
 # Print raw scraper output as JSON
-./dou.sh --raw
+dou --raw
 
 # Raw output using only consulta strategy
-SCRAPER_SOURCE_ORDER=consulta ./dou.sh --date=2025-01-31 --raw
+dou --source-order=consulta --date=2025-01-31 --raw
 
 # Raw output using only highlights strategy
-SCRAPER_SOURCE_ORDER=highlights ./dou.sh --date=2025-01-31 --raw
+dou --source-order=highlights --date=2025-01-31 --raw
+
+# Customize consulta query and limit without env variables
+dou --source-order=consulta --consulta-query="* " --consulta-limit=50 --date=2025-01-31
 
 # Remove duplicated text inside note files (dry run)
 deno task dedupe:notes --dry-run
@@ -50,3 +59,10 @@ deno task dedupe:notes --dry-run
 # Apply duplicate cleanup
 deno task dedupe:notes
 ```
+
+Environment variables are still supported as fallback:
+`SCRAPER_SOURCE_ORDER`, `SCRAPER_CONSULTA_QUERY`, `SCRAPER_CONSULTA_LIMIT`, `AI_MODEL`, and
+`NOTES_DIR`.
+
+Cache files are always stored in a temp folder (`$TMPDIR`/`$TMP`/`$TEMP`), so running `dou` from
+other directories does not create local `_cache` folders.
