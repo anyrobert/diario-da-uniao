@@ -8,13 +8,13 @@ class MockOpenAI {
   chat = {
     completions: {
       create: async () => {
-        const chunks: string[] = this.chunks;
+        const content = this.chunks.join("");
         return {
-          async *[Symbol.asyncIterator](): AsyncGenerator<{ choices: Array<{ delta: { content: string } }> }> {
-            for (const chunk of chunks) {
-              yield { choices: [{ delta: { content: chunk } }] };
-            }
-          },
+          choices: [
+            {
+              message: { content },
+            },
+          ],
         };
       },
     },

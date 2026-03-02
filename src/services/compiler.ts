@@ -58,7 +58,7 @@ export class OpenAICompilerService implements CompilerService {
 
   async compileHighlights(highlights: Highlight[]): Promise<string> {
     try {
-      const stream = await this.openai.chat.completions.create({
+      const completion = await this.openai.chat.completions.create({
         model: this.model,
         messages: [
           { role: "system", content: this.systemPrompt },
@@ -66,15 +66,9 @@ export class OpenAICompilerService implements CompilerService {
         ],
         temperature: config.aiModel.temperature ?? 0.7,
         max_tokens: config.aiModel.maxTokens ?? 2000,
-        stream: true,
       });
 
-      let fullContent = "";
-      for await (const chunk of stream) {
-        const content = chunk.choices[0]?.delta?.content || "";
-        fullContent += content;
-      }
-
+      const fullContent = completion.choices[0]?.message?.content ?? "";
       if (!fullContent) {
         throw new Error("No content received from OpenAI");
       }

@@ -1,6 +1,7 @@
 import { parseArgs } from "@std/cli/parse-args";
 import { Highlight, CacheService, ScraperService, CompilerService } from "../types/index.ts";
 import { config } from "../config/config.ts";
+import { removeDuplicatedText } from "../utils/text-dedupe.ts";
 
 export class DiarioApp {
   constructor(
@@ -77,8 +78,8 @@ export class DiarioApp {
 
     console.log(`Found ${highlights.length} highlights for ${date}`);
 
-
-    const summary = await this.compiler.compileHighlights(highlights);
+    const rawSummary = await this.compiler.compileHighlights(highlights);
+    const { cleaned: summary } = removeDuplicatedText(rawSummary);
     const content = this.composeMarkdown(date, summary);
     await Deno.mkdir(config.notesDir, { recursive: true });
     await Deno.writeTextFile(notePath, content);
