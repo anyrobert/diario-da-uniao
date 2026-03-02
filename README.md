@@ -35,6 +35,15 @@ SCRAPER_SOURCE_ORDER=consulta,highlights ./dou.sh --date=2025-01-31
 # Keep only the highlights-page strategy
 SCRAPER_SOURCE_ORDER=highlights ./dou.sh --date=2025-01-31
 
+# Print raw scraper output as JSON
+./dou.sh --raw
+
+# Raw output using only consulta strategy
+SCRAPER_SOURCE_ORDER=consulta ./dou.sh --date=2025-01-31 --raw
+
+# Raw output using only highlights strategy
+SCRAPER_SOURCE_ORDER=highlights ./dou.sh --date=2025-01-31 --raw
+
 # Remove duplicated text inside note files (dry run)
 deno task dedupe:notes --dry-run
 

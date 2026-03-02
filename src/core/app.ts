@@ -41,16 +41,27 @@ export class DiarioApp {
   async run(args: string[] = []): Promise<void> {
     const flags = parseArgs(args, {
       string: ["model", "date"],
-      default: { model: config.aiModel.model },
+      boolean: ["raw"],
+      default: { model: config.aiModel.model, raw: false },
     });
 
     const date = this.formatDate(flags.date);
-    console.log(`Fetching highlights for ${date}`);
+    const outputRaw = Boolean(flags.raw);
+    if (!outputRaw) {
+      console.log(`Fetching highlights for ${date}`);
+    }
 
     const notePath = `${config.notesDir}/${date}.md`;
-    if (await this.fileExists(notePath)) {
+    if (!outputRaw && await this.fileExists(notePath)) {
       const note = await Deno.readTextFile(notePath);
       await Deno.stdout.write(new TextEncoder().encode(note));
+      return;
+    }
+
+    if (outputRaw) {
+      const rawHighlights = await this.scraper.getHighlights(date);
+      const payload = `${JSON.stringify(Array.isArray(rawHighlights) ? rawHighlights : [], null, 2)}\n`;
+      await Deno.stdout.write(new TextEncoder().encode(payload));
       return;
     }
 
@@ -63,6 +74,7 @@ export class DiarioApp {
     }
 
     await this.cache.set(`highlights-${date}`, highlights);
+
     console.log(`Found ${highlights.length} highlights for ${date}`);
 
 
