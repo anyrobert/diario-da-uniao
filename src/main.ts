@@ -2,6 +2,7 @@ import { DiarioApp } from "./core/app.ts";
 import { FileSystemCache } from "./services/cache.ts";
 import { DOUScraperService } from "./services/scraper.ts";
 import { OpenAICompilerService } from "./services/compiler.ts";
+import { getOptionalEnv } from "./utils/env.ts";
 
 if (!import.meta.main) {
   console.error("not using properly");
@@ -9,7 +10,21 @@ if (!import.meta.main) {
 }
 
 const cache = new FileSystemCache();
-const scraper = new DOUScraperService();
+const sourceOrder = (getOptionalEnv("SCRAPER_SOURCE_ORDER") ?? "consulta,highlights")
+  .split(",")
+  .map((value) => value.trim())
+  .filter(Boolean);
+
+const consultaQuery = getOptionalEnv("SCRAPER_CONSULTA_QUERY") ?? "* ";
+const consultaLimit = Number(getOptionalEnv("SCRAPER_CONSULTA_LIMIT") ?? "20");
+
+const scraper = new DOUScraperService({
+  sourceOrder,
+  consulta: {
+    query: consultaQuery,
+    resultLimit: Number.isFinite(consultaLimit) && consultaLimit > 0 ? consultaLimit : 20,
+  },
+});
 const compiler = new OpenAICompilerService();
 
 const app = new DiarioApp(scraper, compiler, cache);
