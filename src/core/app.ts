@@ -76,6 +76,7 @@ export class DiarioApp {
   private composeMarkdown(date: string, summary: string): string {
     const [year, month, day] = date.split("-");
     const header = `# Destaques do Diário Oficial da União - ${day}/${month}/${year}\n\n`;
-    return header + summary;
+    const dateLine = `${day}/${month}/${year}\n\n`;
+    return header + dateLine + summary;
   }
 } 
