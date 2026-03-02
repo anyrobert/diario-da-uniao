@@ -106,7 +106,7 @@ async function run(): Promise<void> {
   if (flags.help) {
     console.log(
       [
-        "Usage: deno run --allow-read --allow-write src/scripts/dedupe_notes.ts [options]",
+        "Usage: deno run --allow-read --allow-write src/scripts/dedupe-notes.ts [options]",
         "",
         "Options:",
         "  --dir=<path>   Notes directory (default: notes or NOTES_DIR env)",

@@ -4,7 +4,7 @@
     "start": "deno run --allow-env --allow-net --allow-read --allow-write --env-file=.env src/main.ts",
     "test": "deno test --allow-env --allow-net --allow-read --allow-write",
     "test:watch": "deno test --watch --allow-env --allow-net --allow-read --allow-write",
-    "dedupe:notes": "deno run --allow-read --allow-write src/scripts/dedupe_notes.ts"
+    "dedupe:notes": "deno run --allow-read --allow-write src/scripts/dedupe-notes.ts"
   },
   "imports": {
     "@b-fuze/deno-dom": "jsr:@b-fuze/deno-dom@^0.1.48",

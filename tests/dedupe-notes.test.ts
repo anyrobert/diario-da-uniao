@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { removeDuplicatedText } from "../src/scripts/dedupe_notes.ts";
+import { removeDuplicatedText } from "../src/scripts/dedupe-notes.ts";
 
 function buildLongParagraph(prefix: string): string {
   return `${prefix} ${"conteudo ".repeat(80).trim()}`;
