@@ -40,9 +40,9 @@ export class DiarioApp {
 
   async run(args: string[] = []): Promise<void> {
     const flags = parseArgs(args, {
-      string: ["model", "date"],
+      string: ["date"],
       boolean: ["raw"],
-      default: { model: config.aiModel.model, raw: false },
+      default: { raw: false },
     });
 
     const date = this.formatDate(flags.date);
